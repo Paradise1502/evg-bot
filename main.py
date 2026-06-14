@@ -506,7 +506,7 @@ async def kickcheck(ctx, scope: str = "NxW", season: str = DEFAULT_SEASON):
 
 @bot.command()
 async def groupstats(ctx, season: str = DEFAULT_SEASON):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send("❌ Command not allowed here.")
         return
@@ -855,7 +855,7 @@ async def totaldeads(ctx, *args):
       !totaldeads NxW 50             -> Top 50, NxW on Server 375
       !totaldeads all 50             -> Explicitly ALL, Top 50
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -994,7 +994,7 @@ async def activity(ctx, *args):
       !activity statue
       !activity Activity 10
     """
-    allowed_channels = {1451032633843912858}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -1252,7 +1252,7 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 
 @bot.command()
 async def topmana(ctx, *args):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -1356,7 +1356,7 @@ async def topmana(ctx, *args):
 
 @bot.command()
 async def topheal(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -1430,7 +1430,7 @@ async def toprssheal_NxW(ctx, *args):
     - Season arg like 'sos5' (must exist in SEASON_SHEETS)
     - Optional number arg for N: top/bottom N (default 10, clamped 1..50)
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -1608,7 +1608,7 @@ async def toprssheal_NxW(ctx, *args):
 
 @bot.command()
 async def toprssheal(ctx, *args):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -1773,7 +1773,7 @@ async def topmanaspent(ctx, *args):
       !topmana 20 sos5   -> Top 20 for 'sos5'
     Filters: only players present in BOTH tabs, Power ≥ 25M.
     """
-    allowed_channels = {1451032633843912858}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -2013,7 +2013,7 @@ async def kills(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 
 @bot.command()
 async def topkills(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -2101,7 +2101,7 @@ async def lowdeads(ctx, *args):
       !lowdeads NxW sos5 30            -> NxW+S375, season 'sos5', bottom 30
       !lowdeads all 50                 -> Remove NxW filter and show bottom 50
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -2266,7 +2266,7 @@ async def lowmerits(ctx, *args):
     Uses merits in column 12 and power in column 13 (1-based).
     Supports NxW (S375) filter. Requires power >= 50M.
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -2510,7 +2510,7 @@ async def topdeads(ctx, *args):
       !topdeads NxW sos5 30            -> NxW+S375, season 'sos5', top 30
       !topdeads all 50                 -> Explicitly remove NxW filter and show top 50
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -2679,7 +2679,7 @@ async def topmerits(ctx, *args):
       !topmerits NxW sos5 30             -> NxW+S375, season 'sos5', top 30
       !topmerits all 50                  -> Remove NxW filter explicitly
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
         return
@@ -3066,7 +3066,7 @@ async def lowperformer(ctx, threshold: float = 12.0, season: str = DEFAULT_SEASO
       - above target: reward (capped)
     Only players present in BOTH tabs, power ≥ 50M, server == 375.
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Command is not working here.")
         return
@@ -3249,7 +3249,7 @@ async def topperformer(ctx, threshold: float = 12.0, season: str = DEFAULT_SEASO
           * ratio < target  -> heavy penalty with quadratic scale
           * ratio >= target -> reward (up to +75% boost), capped
     """
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Command is not working here.")
         return
@@ -3482,7 +3482,7 @@ from discord.ext import commands
 
 @bot.command()
 async def matchups2(ctx, season: str = "test"):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send("❌ Command not allowed here.")
         return
@@ -3680,7 +3680,7 @@ async def matchups2(ctx, season: str = "test"):
 
 @bot.command()
 async def matchups(ctx, season: str = DEFAULT_SEASON):
-    allowed_channels = {1451032633843912858, 1315339806443700315}
+    allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send("❌ Command not allowed here.")
         return
@@ -4031,7 +4031,7 @@ async def warfarm(ctx):
 
 @bot.command(aliases=['help', 'info', 'guide'])
 async def commands(ctx):
-    allowed_channels = {1451032633843912858, 1315339806443700315, 1498769056499761313}  # allowed channel ID
+    allowed_channels = {1515777892016193656}  # allowed channel ID
     if ctx.channel.id != allowed_channel_id:
         await ctx.send(f"❌ Commands are only allowed in <#{allowed_channel_id}>.")
         return
