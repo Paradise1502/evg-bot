@@ -4037,7 +4037,7 @@ async def commands(ctx):
         return
 
     help_text = """
-📜 **NxW Bot – Available Commands**
+📜 **EvG Bot – Available Commands**
 You DONT need the [].
 
 **📊 Progress & Player Stats**
@@ -4049,9 +4049,6 @@ You DONT need the [].
 
 **🏆 Leaderboards**
 - `!topmana` — Top mana gathered (delta)
-- `!topmanaspent` — Top mana spent (delta)
-- `!toprssheal` — Top RSS spent (heals/training)
-- `!toprssheal_NxW` — Top RSS spent in NxW(heals/training)
 - `!topheal` — Top units healed
 - `!topkills` — Top kill gainers
 - `!topdeads` — Highest dead units
