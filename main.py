@@ -2538,16 +2538,6 @@ def role_check():
 async def on_ready():
     print(f"✅ Bot is online as {bot.user}")
 
-    # your existing daily digest loop
-    if not scheduled_event_check.is_running():
-        scheduled_event_check.start()
-
-    # 🔥 start the auto-ping loop (the one that reads the sheet and pings)
-    if not event_autoping_loop.is_running():
-        event_autoping_loop.start()
-
-    print("[events] event_autoping_loop running")
-
 @bot.command(aliases=['help', 'info', 'guide'])
 async def commands(ctx):
     allowed_channels = {1515777892016193656}  # allowed channel ID
