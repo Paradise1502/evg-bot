@@ -59,6 +59,7 @@ async def global_vacation_check(ctx):
 CONFIRM_CHANNEL_ID = 1450959657899397180  # ID of the channel with the message + reactions
 WAR_CHANNEL_ID = 1450958979084587120  # ⬅️ replace with your war channel ID
 REACTION_MESSAGE_ID = 1450959377304391922  # ⬅️ replace with your message ID
+ALLOWED_COMMAND_CHANNEL_ID = 1515777892016193656
 
 # Emoji → new channel name mapping
 WAR_CHANNEL_REACTIONS = {
@@ -200,10 +201,10 @@ async def totaldeads(ctx, *args):
     """
 
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     # Defaults
     top_n = 10
@@ -331,6 +332,10 @@ async def totaldeads(ctx, *args):
 @bot.command()
 async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
     async with ctx.typing():
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
     try:
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season)
@@ -428,10 +433,10 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 @bot.command()
 async def topmana(ctx, *args):
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     # Defaults
     top_n = 10
@@ -533,10 +538,10 @@ async def topmana(ctx, *args):
 @bot.command()
 async def topheal(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     try:
         season = season.lower()
@@ -697,10 +702,10 @@ async def kills(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 @bot.command()
 async def topkills(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     try:
         season = season.lower()
@@ -786,10 +791,10 @@ async def lowdeads(ctx, *args):
       !lowdeads all 50                 -> Remove EvG filter and show bottom 50
     """
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     # Defaults
     top_n = 10
@@ -952,10 +957,10 @@ async def lowmerits(ctx, *args):
     Supports EvG (S320) filter. Requires power >= 50M.
     """
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     # Defaults
     top_n = 10
@@ -1103,6 +1108,10 @@ async def lowmerits(ctx, *args):
 async def allmana(ctx, season: str = DEFAULT_SEASON):
     """Shows the total mana gathered by the entire alliance and its dollar value."""
     async with ctx.typing():
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
     try:
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season)
@@ -1198,10 +1207,10 @@ async def topdeads(ctx, *args):
       !topdeads all 50                 -> Explicitly remove EvG filter and show top 50
     """
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
-        return
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     # Defaults
     top_n = 10
@@ -1358,6 +1367,10 @@ async def topdeads(ctx, *args):
 @bot.command(aliases=['stats'])
 async def progress(ctx, lord_id: str, season: str = DEFAULT_SEASON):
     async with ctx.typing():
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
     try:
         season = season.lower()
         is_default_season = (season == DEFAULT_SEASON)
@@ -1783,11 +1796,10 @@ async def matchups2(ctx, season: str = "test"):
 @bot.command()
 async def matchups(ctx, season: str = DEFAULT_SEASON):
     async with ctx.typing():
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send("❌ Command not allowed here.")
-        return
-
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
     try:
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season, season)
