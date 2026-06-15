@@ -1519,7 +1519,7 @@ async def progress(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
