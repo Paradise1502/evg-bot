@@ -2009,7 +2009,6 @@ You DONT need the [].
 **📊 Progress & Player Stats**
 - `!progress [lord_id] [season]` — Full profile: power, kills, deads, heals, RSS, mana (+gains & rank)
 - `!stats [lord_id] [season]` — Quick snapshot: power, kills, heals, deads (+gain & rank)
-- `!rssheal [lord_id] [season]` — Resources spent on healing (last two sheets)
 - `!kills [lord_id] [season]` — Kill breakdown by troop tier
 - `!mana [lord_id] [season]` — Mana gathered (+gain & rank)
 
