@@ -185,7 +185,6 @@ async def send_section_cards(ctx, title: str, emoji: str, color: int, items: lis
         
 @bot.command()
 async def totaldeads(ctx, *args):
-    async with ctx.typing():
     """
     Rank by TOTAL deaths (current value in Column R).
     Default: ALL players (≥25M power) in the default season.
@@ -199,6 +198,8 @@ async def totaldeads(ctx, *args):
       !totaldeads EvG 50             -> Top 50, EvG on Server 320
       !totaldeads all 50             -> Explicitly ALL, Top 50
     """
+
+    async with ctx.typing():
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
@@ -772,7 +773,6 @@ async def topkills(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
 
 @bot.command()
 async def lowdeads(ctx, *args):
-    async with ctx.typing():
     """
     Lowest dead gains between the last two tabs.
 
@@ -785,6 +785,7 @@ async def lowdeads(ctx, *args):
       !lowdeads EvG sos5 30            -> EvG+S320, season 'sos5', bottom 30
       !lowdeads all 50                 -> Remove EvG filter and show bottom 50
     """
+    async with ctx.typing():
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
@@ -945,12 +946,12 @@ async def lowdeads(ctx, *args):
 
 @bot.command()
 async def lowmerits(ctx, *args):
-    async with ctx.typing():
     """
     Lowest merit gains between the last two tabs (IDs must be in both).
     Uses merits in column 12 and power in column 13 (1-based).
     Supports EvG (S320) filter. Requires power >= 50M.
     """
+    async with ctx.typing():
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
@@ -1100,8 +1101,8 @@ async def lowmerits(ctx, *args):
 
 @bot.command()
 async def allmana(ctx, season: str = DEFAULT_SEASON):
-    async with ctx.typing():
     """Shows the total mana gathered by the entire alliance and its dollar value."""
+    async with ctx.typing():
     try:
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season)
@@ -1186,7 +1187,6 @@ async def allmana(ctx, season: str = DEFAULT_SEASON):
 
 @bot.command()
 async def topdeads(ctx, *args):
-    async with ctx.typing():
     """
     Usage examples:
       !topdeads                         -> Top 10 overall, default season
@@ -1197,6 +1197,7 @@ async def topdeads(ctx, *args):
       !topdeads EvG sos5 30            -> EvG+S320, season 'sos5', top 30
       !topdeads all 50                 -> Explicitly remove EvG filter and show top 50
     """
+    async with ctx.typing():
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
         await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
@@ -1353,8 +1354,6 @@ async def topdeads(ctx, *args):
 
     except Exception as e:
         await ctx.send(f"❌ Error: {e}")
-
-async with ctx.typing():
         
 @bot.command(aliases=['stats'])
 async def progress(ctx, lord_id: str, season: str = DEFAULT_SEASON):
