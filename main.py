@@ -24,14 +24,14 @@ ANNOUNCE_CHANNEL_ID = 1383515877793595435  # 👈 set your daily-announcement ch
 # Season sheet
 SEASON_SHEETS = {
     "sos6": "Call of Dragons - SoS6",
-    "hk1": "NxW - HK1",
-    "sos2": "NxW - SoS2",
+    "hk1": "EvG - HK1",
+    "sos2": "EvG - SoS2",
     "test": "testsheet",
-    "hk2": "NxW - HK2",
-    "sos3": "NxW - SoS3",
-    "sos4": "NxW - SoS4",
-    "z2": "NxW - SoS4 - Z2",
-    "fz": "NxW - FZ",
+    "hk2": "EvG - HK2",
+    "sos3": "EvG - SoS3",
+    "sos4": "EvG - SoS4",
+    "z2": "EvG - SoS4 - Z2",
+    "fz": "EvG - FZ",
 }
 
 DEFAULT_SEASON = "sos4"
@@ -58,69 +58,6 @@ async def global_vacation_check(ctx):
         await ctx.send(VACATION_MSG)
         return False
     return True
-
-@bot.command()
-async def rssheal(ctx, lord_id: str, season: str = DEFAULT_SEASON):
-    try:
-        # Lowercase just in case someone writes "SoS2"
-        season = season.lower()
-        sheet_name = SEASON_SHEETS.get(season)
-
-        if not sheet_name:
-            await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
-            return
-
-        tabs = client.open(sheet_name).worksheets()
-        if len(tabs) < 2:
-            await ctx.send("❌ Not enough sheets to compare.")
-            return
-
-        latest = tabs[-1]
-        previous = tabs[-2]
-
-        latest_data = latest.get_all_values()
-        previous_data = previous.get_all_values()
-
-        headers = latest_data[0]
-        name_index = 1  # Column B
-        id_index = headers.index("lord_id")
-
-        # Column indices: AF=31, AG=32, AH=33, AI=34 (zero-indexed)
-        gold_idx, wood_idx, ore_idx, mana_idx = 31, 32, 33, 34
-
-        def find_row(data):
-            for row in data[1:]:
-                if row[id_index] == lord_id:
-                    return row
-            return None
-
-        row_latest = find_row(latest_data)
-        username = row_latest[name_index]
-        row_prev = find_row(previous_data)
-
-        if not row_latest or not row_prev:
-            await ctx.send("❌ Lord ID not found in both sheets.")
-            return
-
-        def to_int(val):
-            try: return int(val)
-            except: return 0
-
-        gold = to_int(row_latest[gold_idx]) - to_int(row_prev[gold_idx])
-        wood = to_int(row_latest[wood_idx]) - to_int(row_prev[wood_idx])
-        ore  = to_int(row_latest[ore_idx])  - to_int(row_prev[ore_idx])
-        mana = to_int(row_latest[mana_idx]) - to_int(row_prev[mana_idx])
-
-        await ctx.send(
-            f"📊 RSS Spent by `{username}` (`{lord_id}`) between `{previous.title}` → `{latest.title}`:\n"
-            f"🪙 Gold: {gold:,}\n"
-            f"🪵 Wood: {wood:,}\n"
-            f"⛏️ Ore: {ore:,}\n"
-            f"💧 Mana: {mana:,}"
-        )
-
-    except Exception as e:
-        await ctx.send(f"❌ Error: {e}")
 
 # Config values
 CONFIRM_CHANNEL_ID = 1450959657899397180  # ID of the channel with the message + reactions
@@ -195,7 +132,7 @@ def fmt_pct(n: float) -> str:
 # ---------- card rendering ----------
 
 def player_field_name(p):
-    # "Name (last6id)  •  S375"
+    # "Name (last6id)  •  S320"
     lid = p.get("lid","")
     short = lid[-6:] if lid else ""
     srv = p.get("srv","")
@@ -249,356 +186,20 @@ async def send_section_cards(ctx, title: str, emoji: str, color: int, items: lis
             )
         await ctx.send(embed=embed)
         page += 1
-
-@bot.command()
-async def groupstats(ctx, season: str = DEFAULT_SEASON):
-    allowed_channels = {1515777892016193656}
-    if ctx.channel.id not in allowed_channels:
-        await ctx.send("❌ Command not allowed here.")
-        return
-
-    # 1. ADD YOUR TEAM ROSTER HERE
-    TEAM_ROSTER = {
-        "16072454": "Sun",
-        "1038031": "Moon",
-        "1209648": "Moon",
-        "2554608": "Sun",
-        "4508150": "Sun",
-        "6420073": "Moon",
-        "3238703": "Moon",
-        "14685384": "Sun",
-        "1652362": "Sun",
-        "4475636": "Moon",
-        "10046314": "Moon",
-        "15384392": "Sun",
-        "2069785": "Sun",
-        "14920281": "Moon",
-        "3569766": "Moon",
-        "767323": "Sun",
-        "1902775": "Sun",
-        "9947044": "Moon",
-        "3452794": "Moon",
-        "15727504": "Sun",
-        "15592594": "Sun",
-        "8532169": "Moon",
-        "15253936": "Moon",
-        "14893533": "Sun",
-        "11589778": "Sun",
-        "6409636": "Moon",
-        "14625955": "Moon",
-        "5306715": "Sun",
-        "1301820": "Sun",
-        "12907861": "Moon",
-        "15344782": "Moon",
-        "12121490": "Sun",
-        "1327811": "Sun",
-        "12386205": "Moon",
-        "15665516": "Moon",
-        "15719441": "Sun",
-        "1191528": "Sun",
-        "1157541": "Moon",
-        "16007668": "Moon",
-        "11487055": "Sun",
-        "4942738": "Sun",
-        "14868918": "Moon",
-        "2404030": "Moon",
-        "3884083": "Sun",
-        "15168167": "Sun",
-        "11659353": "Moon",
-        "14894521": "Moon",
-        "9298611": "Sun",
-        "15888878": "Sun",
-        "8498158": "Moon",
-        "4352097": "Moon",
-        "8167052": "Sun",
-        "7871135": "Sun",
-        "14855893": "Moon",
-        "1480794": "Moon",
-        "1475373": "Sun",
-        "3383792": "Sun",
-        "19117667": "Moon",
-        "8347543": "Moon",
-        "15639051": "Sun",
-        "4123943": "Sun",
-        "11769711": "Moon",
-        "4188659": "Moon",
-        "12861502": "Sun",
-        "12239902": "Sun",
-        "4000088": "Moon",
-        "2774776": "Moon",
-        "12391559": "Sun",
-        "1666865": "Sun",
-        "1292270": "Moon",
-        "1129896": "Moon",
-        "1896011": "Sun",
-        "1696957": "Sun",
-        "2355170": "Moon",
-        "3788189": "Moon",
-        "12426797": "Sun",
-        "3566602": "Sun",
-        "10870772": "Moon",
-        "2382626": "Moon",
-        "14859151": "Sun",
-        "11699043": "Sun",
-        "1485262": "Moon",
-        "1186483": "Moon",
-        "8654500": "Sun",
-        "1207595": "Sun",
-        "12049278": "Moon",
-        "15406991": "Moon",
-        "4188458": "Sun",
-        "14534389": "Sun",
-        "15203473": "Moon",
-        "14835271": "Moon",
-        "12857281": "Sun",
-        "11648388": "Sun",
-        "3246823": "Moon",
-        "11529501": "Moon",
-        "11498431": "Sun",
-        "3568431": "Sun",
-        "13848161": "Moon",
-        "15880004": "Moon",
-        "37360": "Sun",
-        "5465713": "Sun",
-        "14990715": "Moon",
-        "14892554": "Moon",
-        "14645040": "Sun",
-        "7741397": "Sun",
-        "9089694": "Moon",
-        "15309669": "Moon",
-        "3937721": "Sun",
-        "15138403": "Sun",
-        "12993192": "Moon",
-        "6554196": "Moon",
-        "3221838": "Sun",
-        "5501734": "Sun",
-        "13484309": "Moon",
-        "15292305": "Moon",
-        "12564527": "Sun",
-        "12913373": "Sun",
-        "15017853": "Moon",
-        "2604968": "Moon",
-        "3446240": "Sun",
-        "12049853": "Sun",
-        "12600393": "Moon",
-        "14454676": "Moon",
-        "1426605": "Sun",
-        "1771679": "Sun",
-        "12581309": "Moon",
-        "10339011": "Moon",
-        "1288862": "Sun",
-        "15140100": "Sun",
-        "10403218": "Moon",
-        "15039904": "Moon",
-        "3911741": "Sun",
-        "3282829": "Sun",
-        "9076185": "Moon",
-        "472059": "Moon",
-        "14931101": "Sun",
-        "15985931": "Sun",
-        "15137458": "Moon",
-        "15137525": "Moon",
-        "1363017": "Sun",
-        "15165964": "Sun",
-        "11597010": "Moon",
-        "1015374": "Moon",
-        "14322410": "Sun",
-        "14986396": "Sun",
-        "8350805": "Moon",
-        "15416591": "Moon",
-        "15238376": "Sun",
-        "13756181": "Sun",
-        "124604": "Moon",
-        "15859464": "Moon",
-        "9093069": "Sun",
-        "1177659": "Sun",
-        "12451416": "Moon",
-        "4213197": "Moon",
-        "12909862": "Sun",
-        "15673802": "Sun",
-        "15872187": "Moon",
-        "12042542": "Moon",
-        "15029841": "Sun",
-        "8218786": "Sun",
-        "9011380": "Moon",
-        "11516385": "Moon",
-        "1987541": "Sun",
-        "9900242": "Sun",
-        "14840896": "Moon",
-        "14891433": "Moon",
-        "9561066": "Sun",
-        "11434627": "Sun",
-        "16457327": "Moon",
-        "15138989": "Moon",
-        "14991669": "Sun",
-        "14841316": "Sun",
-        "5949871": "Moon",
-        "14840981": "Moon",
-        "14860406": "Sun",
-        "13255722": "Sun",
-        "15808179": "Moon",
-        "14249731": "Moon",
-        "15240107": "Sun",
-        "14697698": "Sun",
-        "12467111": "Moon",
-    }
-
-    try:
-        season = season.lower()
-        sheet_name = SEASON_SHEETS.get(season, season)
-        tabs = client.open(sheet_name).worksheets()
-        scan_tabs = [tab for tab in tabs if tab.title.lower() != "roster"]
-        
-        if len(scan_tabs) < 2:
-            await ctx.send("❌ Not enough scan sheets to compare.")
-            return
-
-        latest = scan_tabs[-1]
-        previous = scan_tabs[-2]
-        data_latest = latest.get_all_values()
-        data_prev   = previous.get_all_values()
-        headers = data_latest[0]
-
-        def find_idx(name, fallback):
-            if name in headers: return headers.index(name)
-            for i, h in enumerate(headers):
-                if name.lower() in h.lower(): return i
-            return fallback
-
-        def to_int(val):
-            try:
-                v = str(val).replace(',', '').replace(' ', '').strip()
-                return int(v) if v not in ("", "-") else 0
-            except: return 0
-
-        # Indices
-        id_idx     = find_idx("lord_id", 0)
-        name_idx   = find_idx("name", 1)
-        power_idx  = find_idx("highest_power", 2)
-        kills_idx  = find_idx("units_killed", 9) 
-        merits_idx = find_idx("merits", 11) 
-        heal_idx   = find_idx("units_healed", 18)
-        dead_idx   = find_idx("units_dead", 17)
-
-        max_needed_idx = max(heal_idx, kills_idx, merits_idx, power_idx, dead_idx)
-
-        prev_map = {
-            row[id_idx].strip(): row for row in data_prev[1:]
-            if len(row) > max_needed_idx and row[id_idx].strip()
-        }
-
-        group_data = {
-            "Sun":  {"power": 0, "kills": 0, "deads": 0, "heals": 0, "merits": 0, "players": []},
-            "Moon": {"power": 0, "kills": 0, "deads": 0, "heals": 0, "merits": 0, "players": []}
-        }
-
-        for row in data_latest[1:]:
-            if len(row) <= max_needed_idx: continue
-            lid = (row[id_idx] or "").strip()
-            group = TEAM_ROSTER.get(lid)
-            if not group: continue 
-
-            prev_row = prev_map.get(lid)
-            if prev_row is None: continue
-
-            p_gain = {
-                "name": row[name_idx],
-                "power": to_int(row[power_idx]),
-                "kills": to_int(row[kills_idx]) - to_int(prev_row[kills_idx]),
-                "deads": to_int(row[dead_idx]) - to_int(prev_row[dead_idx]),
-                "heals": to_int(row[heal_idx]) - to_int(prev_row[heal_idx]),
-                "merits": to_int(row[merits_idx]) - to_int(prev_row[merits_idx])
-            }
-
-            g_stats = group_data[group]
-            g_stats["power"]  += p_gain["power"]
-            g_stats["kills"]  += p_gain["kills"]
-            g_stats["deads"]  += p_gain["deads"]
-            g_stats["heals"]  += p_gain["heals"]
-            g_stats["merits"] += p_gain["merits"]
-            g_stats["players"].append(p_gain)
-
-        # UI FORMATTING
-        def format_group_section(name, emoji, stats):
-            power = stats["power"]
-            merits = stats["merits"]
-            efficiency = (merits / power * 100) if power > 0 else 0
-            
-            # CRITICAL FIX: The spaces after the colons have been reduced. 
-            # If you add too many spaces here, Discord will push the right column down again.
-            def fmt(num):
-                if num >= 1_000_000_000: return f"{num / 1_000_000_000:.2f}B"
-                elif num >= 1_000_000: return f"{num / 1_000_000:.2f}M"
-                elif num >= 1_000: return f"{num / 1_000:.1f}K"
-                return str(num)
-            
-            stats_block = (
-                f"```yaml\n"
-                f"Power:  {fmt(power)}\n"
-                f"Merits: {fmt(merits)}\n"
-                f"Kills:  {fmt(stats['kills'])}\n"
-                f"Deads:  {fmt(stats['deads'])}\n"
-                f"Heals:  {fmt(stats['heals'])}\n"
-                f"Eff:    {efficiency:.2f}%\n"
-                f"```"
-            )
-
-            # Top Performers Block
-            top_players = sorted(stats["players"], key=lambda x: x["merits"], reverse=True)[:3]
-            medals = ["🥇", "🥈", "🥉"]
-            top_str = ""
-            for i, p in enumerate(top_players):
-                # Force long names to be shorter to protect the layout width
-                display_name = p['name'][:13] + ".." if len(p['name']) > 13 else p['name']
-                
-                # Removed the word " merits" at the end to save even more space!
-                top_str += f"{medals[i]} **{display_name}**\n└ `{fmt(p['merits'])}` Merits\n"
-
-            return f"{emoji} __**GROUP {name.upper()}**__", stats_block, top_str
-
-        # Create Single Embed
-        embed = discord.Embed(
-            title="📊 Group Stats - Sun vs Moon",
-            description=f"**Comparing:** `{previous.title}` ➔ `{latest.title}`\n" + "▬" * 15,
-            color=0x2f3136 # Dark "Discord" theme color
-        )
-
-        # Sun Group Fields
-        title_s, stats_s, top_s = format_group_section("Sun", "☀️", group_data["Sun"])
-        embed.add_field(name=title_s, value=stats_s, inline=True)
-        embed.add_field(name="⭐ TOP PERFORMERS", value=top_s, inline=True)
-        
-        # Spacer Field (Forces the next group to the bottom)
-        embed.add_field(name="\u200b", value="▬" * 30, inline=False)
-
-        # Moon Group Fields
-        title_m, stats_m, top_m = format_group_section("Moon", "🌙", group_data["Moon"])
-        embed.add_field(name=title_m, value=stats_m, inline=True)
-        embed.add_field(name="⭐ TOP PERFORMERS", value=top_m, inline=True)
-
-        embed.set_footer(text="If you read this, sun sucks.")
-        
-        # Ensure your datetime import matches this format
-        embed.timestamp = datetime.now(UTC) 
-
-        await ctx.send(embed=embed)
-
-    except Exception as e:
-        await ctx.send(f"❌ **Error:** {e}")
         
 @bot.command()
 async def totaldeads(ctx, *args):
     """
     Rank by TOTAL deaths (current value in Column R).
     Default: ALL players (≥25M power) in the default season.
-    Add 'NxW' to filter to NxW on Server 375.
+    Add 'EvG' to filter to EvG on Server 320.
 
     Examples:
       !totaldeads                    -> Top 10, ALL players, default season
       !totaldeads 25                 -> Top 25, ALL players
       !totaldeads sos5               -> Top 10, ALL players, season 'sos5'
       !totaldeads sos5 30            -> Top 30, ALL players, season 'sos5'
-      !totaldeads NxW 50             -> Top 50, NxW on Server 375
+      !totaldeads EvG 50             -> Top 50, EvG on Server 320
       !totaldeads all 50             -> Explicitly ALL, Top 50
     """
     allowed_channels = {1515777892016193656}
@@ -609,7 +210,7 @@ async def totaldeads(ctx, *args):
     # Defaults
     top_n = 10
     season = DEFAULT_SEASON
-    filter_NxW = False            # <-- default is ALL (no NxW filter)
+    filter_EvG = False            # <-- default is ALL (no EvG filter)
     min_power = 25_000_000
 
     # Parse args flexibly
@@ -618,16 +219,16 @@ async def totaldeads(ctx, *args):
         if a.isdigit():
             top_n = max(1, min(100, int(a)))
             continue
-        if a in ("NxW", "NxW375"):
-            filter_NxW = True
+        if a in ("EvG", "EvG320"):
+            filter_EvG = True
             continue
         if a in ("all", "*"):
-            filter_NxW = False
+            filter_EvG = False
             continue
         if a in SEASON_SHEETS:
             season = a
             continue
-        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'NxW', 'all'.")
+        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'EvG', 'all'.")
         return
 
     try:
@@ -636,7 +237,7 @@ async def totaldeads(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 1:
             await ctx.send("❌ No sheets found.")
             return
@@ -663,8 +264,8 @@ async def totaldeads(ctx, *args):
             except:
                 return 0
 
-        def is_NxW(tag: str) -> bool:
-            return bool(tag) and tag.strip().upper().startswith("NxW")
+        def is_EvG(tag: str) -> bool:
+            return bool(tag) and tag.strip().upper().startswith("EvG")
 
         rows = []
         for row in data_latest[1:]:
@@ -680,9 +281,9 @@ async def totaldeads(ctx, *args):
                 continue
 
             alliance = (row[alliance_index] or "").strip()
-            if filter_NxW:
+            if filter_EvG:
                 server_val = (row[server_idx] or "").strip()
-                if not is_NxW(alliance) or str(server_val) != "375":
+                if not is_EvG(alliance) or str(server_val) != "320":
                     continue
 
             dead_now = to_int(row[dead_index])
@@ -690,7 +291,7 @@ async def totaldeads(ctx, *args):
             full_name = f"[{alliance}] {name}"
             rows.append((full_name, dead_now))
 
-        scope = "NxW (S375)" if filter_NxW else "All"
+        scope = "EvG (S320)" if filter_EvG else "All"
         if not rows:
             await ctx.send(f"**💀 Total Deaths — Top {top_n} — {scope}**\n`{latest.title}`:\n_No eligible players found (≥25M power)._")
             return
@@ -738,7 +339,7 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Need at least two snapshots to calculate gain.")
             return
@@ -776,20 +377,20 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send("❌ Lord ID not found in both the start and end of this season.")
             return
 
-        # Calculate gains for ALL S375 players to determine rank
-        s375_gains = []
+        # Calculate gains for ALL S320 players to determine rank
+        s320_gains = []
         for row in data_latest[1:]:
             l_id = row[id_idx].strip()
-            # Ensure they are S375 and exist in the oldest sheet
-            if len(row) > server_idx and str(row[server_idx]).strip() == "375":
+            # Ensure they are S320 and exist in the oldest sheet
+            if len(row) > server_idx and str(row[server_idx]).strip() == "320":
                 old_row = oldest_lookup.get(l_id)
                 if old_row:
                     gain = to_int(row[mana_idx]) - to_int(old_row[mana_idx])
-                    s375_gains.append((l_id, gain))
+                    s320_gains.append((l_id, gain))
 
         # Sort for ranking
-        s375_gains.sort(key=lambda x: x[1], reverse=True)
-        rank = next((i+1 for i, (lid, _) in enumerate(s375_gains) if lid == lord_id), None)
+        s320_gains.sort(key=lambda x: x[1], reverse=True)
+        rank = next((i+1 for i, (lid, _) in enumerate(s320_gains) if lid == lord_id), None)
 
         # Player specific stats
         mana_gain = to_int(row_latest[mana_idx]) - to_int(row_oldest[mana_idx])
@@ -816,9 +417,9 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
         )
         
         if rank:
-            embed.add_field(name="🏅 NxW Rank", value=f"#{rank} / {len(s375_gains)}", inline=True)
+            embed.add_field(name="🏅 EvG Rank", value=f"#{rank} / {len(s320_gains)}", inline=True)
         else:
-            embed.set_footer(text="ℹ️ Player is not in NxW.")
+            embed.set_footer(text="ℹ️ Player is not in EvG.")
 
         await ctx.send(embed=embed)
 
@@ -850,7 +451,7 @@ async def topmana(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -943,7 +544,7 @@ async def topheal(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1007,7 +608,7 @@ async def kills(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1106,7 +707,7 @@ async def topkills(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1178,9 +779,9 @@ async def lowdeads(ctx, *args):
       !lowdeads 25                     -> Bottom 25 overall
       !lowdeads sos5                   -> Bottom 10 for season 'sos5'
       !lowdeads sos5 30                -> Bottom 30 for 'sos5'
-      !lowdeads NxW 50                 -> Bottom 50 for NxW on Server 375
-      !lowdeads NxW sos5 30            -> NxW+S375, season 'sos5', bottom 30
-      !lowdeads all 50                 -> Remove NxW filter and show bottom 50
+      !lowdeads EvG 50                 -> Bottom 50 for EvG on Server 320
+      !lowdeads EvG sos5 30            -> EvG+S320, season 'sos5', bottom 30
+      !lowdeads all 50                 -> Remove EvG filter and show bottom 50
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
@@ -1190,7 +791,7 @@ async def lowdeads(ctx, *args):
     # Defaults
     top_n = 10
     season = DEFAULT_SEASON
-    filter_NxW = False       # [NxW*] AND server == 77
+    filter_EvG = False       # [EvG*] AND server == 77
     MIN_POWER = 50_000_000   # >= 50M only
 
     # ---- Parse args (any order) ----
@@ -1199,17 +800,17 @@ async def lowdeads(ctx, *args):
         if a.isdigit():
             top_n = max(1, min(100, int(a)))
             continue
-        if a in ("NxW", "NxW375", "nxw"):
-            filter_NxW = True
+        if a in ("EvG", "EvG320", "EvG"):
+            filter_EvG = True
             continue
         if a in ("all", "*"):
-            filter_NxW = False
+            filter_EvG = False
             continue
         if a in SEASON_SHEETS:
             season = a
             continue
         await ctx.send(
-            f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'NxW', 'all'."
+            f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'EvG', 'all'."
         )
         return
 
@@ -1219,7 +820,7 @@ async def lowdeads(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1257,7 +858,7 @@ async def lowdeads(ctx, *args):
                 if rid:
                     prev_map[rid] = to_int(row[dead_idx])
 
-        # Collect gains for IDs present in BOTH sheets, ≥50M, optional NxW+S77
+        # Collect gains for IDs present in BOTH sheets, ≥50M, optional EvG+S77
         rows = []
         for row in data_latest[1:]:
             if len(row) <= max(dead_idx, power_idx, alliance_idx, server_idx, id_index):
@@ -1273,13 +874,13 @@ async def lowdeads(ctx, *args):
 
             tag = (row[alliance_idx] or "").strip()
             # ... (Inside your data_latest loop)
-            if filter_NxW:
+            if filter_EvG:
                 # We only check the server ID, ignoring the alliance tag entirely
                 server_val = str(row[server_idx] or "").strip()
                 
-                # If the server isn't 375, skip this player
-                # Note: We use "375" because sheets often store numbers as strings
-                if server_val != "375":
+                # If the server isn't 320, skip this player
+                # Note: We use "320" because sheets often store numbers as strings
+                if server_val != "320":
                     continue
 
             dead_then = prev_map.get(rid, 0)
@@ -1293,7 +894,7 @@ async def lowdeads(ctx, *args):
             rows.append((display, gain))
 
         if not rows:
-            sscope = "Server 375 (All Alliances)" if filter_NxW else "All Servers"
+            sscope = "Server 320 (All Alliances)" if filter_EvG else "All Servers"
             await ctx.send(
                 f"**🔻 Lowest {top_n} Dead Gains — {scope} (≥50M Power)**\n"
                 f"`{previous.title}` → `{latest.title}`:\n_No eligible players found._"
@@ -1308,7 +909,7 @@ async def lowdeads(ctx, *args):
         lines = [f"{i+1}. `{name}` — 💀 +{gain:,}" for i, (name, gain) in enumerate(bottom)]
 
         # Header + chunked send
-        scope = "NxW (S375)" if filter_NxW else "All"
+        scope = "EvG (S320)" if filter_EvG else "All"
         header = (
             f"**🔻 Lowest {top_n} Dead Gains — {scope} (≥50M Power)**\n"
             f"`{previous.title}` → `{latest.title}`:\n"
@@ -1345,7 +946,7 @@ async def lowmerits(ctx, *args):
     """
     Lowest merit gains between the last two tabs (IDs must be in both).
     Uses merits in column 12 and power in column 13 (1-based).
-    Supports NxW (S375) filter. Requires power >= 50M.
+    Supports EvG (S320) filter. Requires power >= 50M.
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
@@ -1355,7 +956,7 @@ async def lowmerits(ctx, *args):
     # Defaults
     top_n = 10
     season = DEFAULT_SEASON
-    filter_NxW = False
+    filter_EvG = False
     MIN_POWER = 50_000_000
 
     # Parse args
@@ -1363,14 +964,14 @@ async def lowmerits(ctx, *args):
         a = str(arg).strip().lower()
         if a.isdigit():
             top_n = max(1, min(100, int(a)))
-        elif a in ("NxW", "NxW375", "nxw"):
-            filter_NxW = True
+        elif a in ("EvG", "EvG320", "EvG"):
+            filter_EvG = True
         elif a in ("all", "*"):
-            filter_NxW = False
+            filter_EvG = False
         elif a in SEASON_SHEETS:
             season = a
         else:
-            await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'NxW', 'all'.")
+            await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'EvG', 'all'.")
             return
 
     try:
@@ -1379,7 +980,7 @@ async def lowmerits(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1420,7 +1021,7 @@ async def lowmerits(ctx, *args):
                 if rid:
                     prev_map[rid] = to_int(row[merits_idx])
 
-        # gather (IDs in both, >=50M, optional NxW S375)
+        # gather (IDs in both, >=50M, optional EvG S320)
         rows = []
         for row in data_latest[1:]:
             if len(row) <= max(merits_idx, power_idx, alliance_idx, server_idx, id_index):
@@ -1435,13 +1036,13 @@ async def lowmerits(ctx, *args):
 
             tag = (row[alliance_idx] or "").strip()
             # ... (Inside your data_latest loop)
-            if filter_NxW:
+            if filter_EvG:
                 # We only check the server ID, ignoring the alliance tag entirely
                 server_val = str(row[server_idx] or "").strip()
                 
-                # If the server isn't 375, skip this player
-                # Note: We use "375" because sheets often store numbers as strings
-                if server_val != "375":
+                # If the server isn't 320, skip this player
+                # Note: We use "320" because sheets often store numbers as strings
+                if server_val != "320":
                     continue
 
             m_then = prev_map.get(rid, 0)
@@ -1455,7 +1056,7 @@ async def lowmerits(ctx, *args):
             rows.append((display, gain))
 
         if not rows:
-            scope = "Server 375 (All Alliances)" if filter_NxW else "All Servers"
+            scope = "Server 320 (All Alliances)" if filter_EvG else "All Servers"
             await ctx.send(f"**🔻 Lowest {top_n} Merits Gained — {scope} (≥50M Power)!**\n`{previous.title}` → `{latest.title}`:\n_No eligible players found._")
             return
 
@@ -1465,7 +1066,7 @@ async def lowmerits(ctx, *args):
 
         lines = [f"{i+1}. `{name}` — 🧠 +{gain:,}" for i, (name, gain) in enumerate(bottom)]
 
-        scope = "NxW (S375)" if filter_NxW else "All"
+        scope = "EvG (S320)" if filter_EvG else "All"
         header = f"**🔻 Lowest {top_n} Merits Gained — {scope} (≥50M Power)**\n`{previous.title}` → `{latest.title}`:\n"
 
         chunk = header
@@ -1504,7 +1105,7 @@ async def allmana(ctx, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Need at least two tabs to calculate gain.")
             return
@@ -1535,9 +1136,9 @@ async def allmana(ctx, season: str = DEFAULT_SEASON):
             if len(row) <= mana_idx or len(row) <= serv_idx: 
                 continue
             
-            # 2. STRICT LATEST SERVER FILTER: Only proceed if they are 375 NOW
+            # 2. STRICT LATEST SERVER FILTER: Only proceed if they are 320 NOW
             server_val = str(row[serv_idx]).strip()
-            if server_val != "375":
+            if server_val != "320":
                 continue
 
             lid = row[id_idx].strip()
@@ -1587,9 +1188,9 @@ async def topdeads(ctx, *args):
       !topdeads 25                     -> Top 25 overall
       !topdeads sos5                   -> Top 10 for season 'sos5'
       !topdeads sos5 25                -> Top 25 for season 'sos5'
-      !topdeads NxW 50                 -> Top 50 for NxW on Server 375 (your alliance)
-      !topdeads NxW sos5 30            -> NxW+S375, season 'sos5', top 30
-      !topdeads all 50                 -> Explicitly remove NxW filter and show top 50
+      !topdeads EvG 50                 -> Top 50 for EvG on Server 320 (your alliance)
+      !topdeads EvG sos5 30            -> EvG+S320, season 'sos5', top 30
+      !topdeads all 50                 -> Explicitly remove EvG filter and show top 50
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
@@ -1599,30 +1200,30 @@ async def topdeads(ctx, *args):
     # Defaults
     top_n = 10
     season = DEFAULT_SEASON
-    filter_NxW = False  # toggle for [NxW*] + server 375
+    filter_EvG = False  # toggle for [EvG*] + server 320
 
     # --- Parse args in any order ---
     # digits -> top_n
     # season key -> season
-    # 'NxW' -> filter to NxW on server 375
-    # 'all' or '*' -> remove NxW filter explicitly
+    # 'EvG' -> filter to EvG on server 320
+    # 'all' or '*' -> remove EvG filter explicitly
     for arg in args:
         a = str(arg).strip().lower()
         if a.isdigit():
             top_n = max(1, min(100, int(a)))  # clamp a bit
             continue
-        if a in ("NxW", "NxW375", "nxw"):
-            filter_NxW = True
+        if a in ("EvG", "EvG320", "EvG"):
+            filter_EvG = True
             continue
         if a in ("all", "*"):
-            filter_NxW = False
+            filter_EvG = False
             continue
         # season?
         if a in SEASON_SHEETS:
             season = a
             continue
         # Unknown token -> treat as invalid season token for clarity
-        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'NxW', 'all'.")
+        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'EvG', 'all'.")
         return
 
     try:
@@ -1631,7 +1232,7 @@ async def topdeads(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1669,7 +1270,7 @@ async def topdeads(ctx, *args):
                 if raw_id:
                     prev_map[raw_id] = to_int(row[dead_index])
 
-        # Collect gains (only players present in both sheets, ≥25M power, optional NxW+S375 filter)
+        # Collect gains (only players present in both sheets, ≥25M power, optional EvG+S320 filter)
         results = []
         for row in data_latest[1:]:
             if len(row) <= max(dead_index, power_index, alliance_index, server_idx, id_index):
@@ -1685,13 +1286,13 @@ async def topdeads(ctx, *args):
 
             alliance = (row[alliance_index] or "").strip()
            # ... (Inside your data_latest loop)
-            if filter_NxW:
+            if filter_EvG:
                 # We only check the server ID, ignoring the alliance tag entirely
                 server_val = str(row[server_idx] or "").strip()
                 
-                # If the server isn't 375, skip this player
-                # Note: We use "375" because sheets often store numbers as strings
-                if server_val != "375":
+                # If the server isn't 320, skip this player
+                # Note: We use "320" because sheets often store numbers as strings
+                if server_val != "320":
                     continue
                     
             dead_now = to_int(row[dead_index])
@@ -1706,7 +1307,7 @@ async def topdeads(ctx, *args):
             results.append((full_name, gain))
 
         if not results:
-            scope = "Server 375 (All Alliances)" if filter_NxW else "All Servers"
+            scope = "Server 320 (All Alliances)" if filter_EvG else "All Servers"
             await ctx.send(f"**🏆 Top {top_n} Dead Units Gained — {scope}**\n`{previous.title}` → `{latest.title}`:\n_No eligible players found (≥25M power and present in both sheets)._")
             return
 
@@ -1718,7 +1319,7 @@ async def topdeads(ctx, *args):
         lines = [f"{i+1}. `{name}` — 💀 +{gain:,}" for i, (name, gain) in enumerate(top_rows)]
 
         # Header + chunked send (<=2000 chars)
-        scope = "NxW (S375)" if filter_NxW else "All"
+        scope = "EvG (S320)" if filter_EvG else "All"
         header = f"**🏆 Top {top_n} Dead Units Gained — {scope}**\n`{previous.title}` → `{latest.title}`:\n"
 
         chunk = header
@@ -1756,9 +1357,9 @@ async def topmerits(ctx, *args):
       !topmerits 25                      -> Top 25 overall
       !topmerits sos5                    -> Top 10 for season 'sos5'
       !topmerits sos5 25                 -> Top 25 for season 'sos5'
-      !topmerits NxW 50                  -> Top 50 for NxW on Server 375
-      !topmerits NxW sos5 30             -> NxW+S375, season 'sos5', top 30
-      !topmerits all 50                  -> Remove NxW filter explicitly
+      !topmerits EvG 50                  -> Top 50 for EvG on Server 320
+      !topmerits EvG sos5 30             -> EvG+S320, season 'sos5', top 30
+      !topmerits all 50                  -> Remove EvG filter explicitly
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
@@ -1768,7 +1369,7 @@ async def topmerits(ctx, *args):
     # Defaults
     top_n = 10
     season = DEFAULT_SEASON
-    filter_NxW = False  # [NxW*] + Server 375
+    filter_EvG = False  # [EvG*] + Server 320
 
     # Parse args (any order)
     for arg in args:
@@ -1776,16 +1377,16 @@ async def topmerits(ctx, *args):
         if a.isdigit():
             top_n = max(1, min(100, int(a)))
             continue
-        if a in ("NxW", "NxW375", "nxw"):
-            filter_NxW = True
+        if a in ("EvG", "EvG320", "EvG"):
+            filter_EvG = True
             continue
         if a in ("all", "*"):
-            filter_NxW = False
+            filter_EvG = False
             continue
         if a in SEASON_SHEETS:
             season = a
             continue
-        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'NxW', 'all'.")
+        await ctx.send(f"❌ Invalid argument '{arg}'. Seasons: {', '.join(SEASON_SHEETS.keys())} | Filters: 'EvG', 'all'.")
         return
 
     try:
@@ -1794,7 +1395,7 @@ async def topmerits(ctx, *args):
             await ctx.send(f"❌ Invalid season. Available: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -1835,7 +1436,7 @@ async def topmerits(ctx, *args):
                 if raw_id:
                     prev_map[raw_id] = to_int(row[merits_idx])
 
-        # Collect gains (both sheets, ≥50M power, optional NxW+S375)
+        # Collect gains (both sheets, ≥50M power, optional EvG+S320)
         results = []
         for row in data_latest[1:]:
             if len(row) <= max(merits_idx, power_idx, alliance_idx, server_idx, id_index):
@@ -1851,13 +1452,13 @@ async def topmerits(ctx, *args):
 
             alliance = (row[alliance_idx] or "").strip()
             # ... (Inside your data_latest loop)
-            if filter_NxW:
+            if filter_EvG:
                 # We only check the server ID, ignoring the alliance tag entirely
                 server_val = str(row[server_idx] or "").strip()
                 
-                # If the server isn't 375, skip this player
-                # Note: We use "375" because sheets often store numbers as strings
-                if server_val != "375":
+                # If the server isn't 320, skip this player
+                # Note: We use "320" because sheets often store numbers as strings
+                if server_val != "320":
                     continue
 
             merits_now  = to_int(row[merits_idx])
@@ -1871,7 +1472,7 @@ async def topmerits(ctx, *args):
             results.append((full_name, gain))
 
         if not results:
-            scope = "Server 375 (All Alliances)" if filter_NxW else "All Servers"
+            scope = "Server 320 (All Alliances)" if filter_EvG else "All Servers"
             await ctx.send(f"**🏅 Top {top_n} Merits Gained — {scope}**\n`{previous.title}` → `{latest.title}`:\n_No eligible players found (≥50M power and present in both sheets)._")
             return
 
@@ -1883,7 +1484,7 @@ async def topmerits(ctx, *args):
         lines = [f"{i+1}. `{name}` — 🧠 +{gain:,}" for i, (name, gain) in enumerate(top_rows)]
 
         # Chunked send
-        scope = "NxW (S375)" if filter_NxW else "All"
+        scope = "EvG (S320)" if filter_EvG else "All"
         header = f"**🏅 Top {top_n} Merits Gained — {scope}**\n`{previous.title}` → `{latest.title}`:\n"
 
         chunk = header
@@ -1922,7 +1523,7 @@ async def progress(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -2149,7 +1750,7 @@ async def matchups2(ctx, season: str = "test"):
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season, season)
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -2178,15 +1779,15 @@ async def matchups2(ctx, season: str = "test"):
 
         def emoji_bracket(server):
             return {
-                "375": "🔴 ", "99": "🔴 ", "249": "🔴 ",
+                "320": "🔴 ", "99": "🔴 ", "249": "🔴 ",
                 "40": "🔵 ", "92": "🔵 ", "49": "🔵 "
             }.get(server, "")
 
         SERVER_MAP = {
-            "375": "NxW", "99": "BTX", "92": "wAo", "249": "WB",
+            "320": "EvG", "99": "BTX", "92": "wAo", "249": "WB",
             "40": "TFS", "49": "NTS"
         }
-        matchups = [("375", "40"), ("99", "92"), ("249", "49")]
+        matchups = [("320", "40"), ("99", "92"), ("249", "49")]
 
         # indices
         id_idx     = find_idx("lord_id",        0)
@@ -2347,7 +1948,7 @@ async def matchups(ctx, season: str = DEFAULT_SEASON):
         season = season.lower()
         sheet_name = SEASON_SHEETS.get(season, season)
 
-        tabs = client.open(sheet_name).worksheets()
+        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
@@ -2376,19 +1977,19 @@ async def matchups(ctx, season: str = DEFAULT_SEASON):
 
         def emoji_bracket(server):
             return {
-                "375": "🔴 ", "249": "🔴 ",
+                "320": "🔴 ", "249": "🔴 ",
                 "225": "🔵 ", "49": "🔵 ",
                 "77": "🔴 ", "572": "🔴 ", "357": "🔵 " 
             }.get(server, "")
 
         SERVER_MAP = {
-            "375": "NxW", "249": "WB", "225": "IMFS", "49": "NTS",
+            "320": "EvG", "249": "WB", "225": "IMFS", "49": "NTS",
             "77": "MFD", "572": "HUNT", "357": "YSS"
         }
 
         # Matchups structured as tuples: (Team A tuple, Team B tuple)
         matchups = [
-            (("375",), ("225",)),          # 1v1
+            (("320",), ("225",)),          # 1v1
             (("249",), ("49",)),           # 1v1
             (("77", "572"), ("357",))      # 2v1
         ]
