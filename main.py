@@ -17,10 +17,6 @@ creds_dict = json.loads(creds_json)
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
-EVENT_SHEET_NAME = "Event Schedule2"      # The spreadsheet name
-EVENT_TAB_NAME = "events"               # The tab name
-ANNOUNCE_CHANNEL_ID = 1383515877793595435  # 👈 set your daily-announcement channel
-
 # Season sheet
 SEASON_SHEETS = {
     "sos6": "Call of Dragons - SoS6",
@@ -204,7 +200,7 @@ async def totaldeads(ctx, *args):
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
@@ -430,7 +426,7 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 async def topmana(ctx, *args):
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
@@ -534,7 +530,7 @@ async def topmana(ctx, *args):
 async def topheal(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     try:
@@ -697,7 +693,7 @@ async def kills(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 async def topkills(ctx, top_n: int = 10, season: str = DEFAULT_SEASON):
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     try:
@@ -785,7 +781,7 @@ async def lowdeads(ctx, *args):
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
@@ -950,7 +946,7 @@ async def lowmerits(ctx, *args):
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
@@ -1194,7 +1190,7 @@ async def topdeads(ctx, *args):
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
@@ -1363,7 +1359,7 @@ async def topmerits(ctx, *args):
     """
     allowed_channels = {1515777892016193656}
     if ctx.channel.id not in allowed_channels:
-        await ctx.send(f"❌ Commands are only allowed in <#{1451032633843912858}>.")
+        await ctx.send(f"❌ Commands are only allowed in <#{1515777892016193656}>.")
         return
 
     # Defaults
