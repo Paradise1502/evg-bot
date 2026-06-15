@@ -20,14 +20,14 @@ client = gspread.authorize(creds)
 # Season sheet
 SEASON_SHEETS = {
     "sos6": "Call of Dragons - SoS6",
-    "hk1": "EvG - HK1",
-    "sos2": "EvG - SoS2",
+    "hk1": "NxW - HK1",
+    "sos2": "NxW - SoS2",
     "test": "testsheet",
-    "hk2": "EvG - HK2",
-    "sos3": "EvG - SoS3",
-    "sos4": "EvG - SoS4",
-    "z2": "EvG - SoS4 - Z2",
-    "fz": "EvG - FZ",
+    "hk2": "NxW - HK2",
+    "sos3": "NxW - SoS3",
+    "sos4": "NxW - SoS4",
+    "z2": "NxW - SoS4 - Z2",
+    "fz": "NxW - FZ",
 }
 
 DEFAULT_SEASON = "sos4"
