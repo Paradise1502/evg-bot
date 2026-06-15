@@ -2008,7 +2008,7 @@ async def commands(ctx):
 You DONT need the [].
 
 **📊 Progress & Player Stats**
-- `!progress [lord_id] [season]` — Full profile: power, kills, deads, heals, RSS, mana (+gains & rank)
+- `!progress [lord_id] [season]` — Full profile: power, kills, deads, heals, mana (+gains & rank)
 - `!stats [lord_id] [season]` — Quick snapshot: power, kills, heals, deads (+gain & rank)
 - `!kills [lord_id] [season]` — Kill breakdown by troop tier
 - `!mana [lord_id] [season]` — Mana gathered (+gain & rank)
@@ -2023,7 +2023,7 @@ You DONT need the [].
 - `!lowmerits [X]` — Bottom X by merits gain (optional season or alliance filter)
 
 **🆚 Matchups & Server Stats**
-- `!matchups [season]` — Summary of server war stats (kills, deads, merits, RSS)
+- `!matchups [season]` — Summary of server war stats (kills, deads, merits)
 
 **🗂️ Season Support**
 You can append an optional season key like `sos6`, `hk1`, `sos2` etc. to pull archived data.
