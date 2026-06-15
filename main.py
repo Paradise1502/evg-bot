@@ -346,7 +346,7 @@ async def mana(ctx, lord_id: str, season: str = DEFAULT_SEASON):
 
         # CHANGE: Compare very first sheet [0] with very last sheet [-1]
         latest_sheet, oldest_sheet = tabs[-1], tabs[0]
-        data_latest = latest_sheet.get_all_values()
+        data_latest = await asyncio.to_thread(latest_sheet.get_all_values)
         data_oldest = oldest_sheet.get_all_values()
         
         headers = data_latest[0]
@@ -1523,7 +1523,7 @@ async def progress(ctx, lord_id: str, season: str = DEFAULT_SEASON):
             await ctx.send(f"❌ Invalid season. Options: {', '.join(SEASON_SHEETS.keys())}")
             return
 
-        tabs = await asyncio.to_thread(client.open(sheet_name).worksheets)
+        tabs = client.open(sheet_name).worksheets()
         if len(tabs) < 2:
             await ctx.send("❌ Not enough sheets to compare.")
             return
