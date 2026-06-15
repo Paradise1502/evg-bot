@@ -1997,10 +1997,11 @@ async def on_ready():
 
 @bot.command(aliases=['help', 'info', 'guide'])
 async def commands(ctx):
-    allowed_channels = {1515777892016193656}  # allowed channel ID
-    if ctx.channel.id != allowed_channel_id:
-        await ctx.send(f"❌ Commands are only allowed in <#{allowed_channel_id}>.")
-        return
+    async with ctx.typing():
+        
+        if ctx.channel.id != ALLOWED_COMMAND_CHANNEL_ID:
+            await ctx.send(f"❌ Commands are only allowed in <#{ALLOWED_COMMAND_CHANNEL_ID}>.")
+            return
 
     help_text = """
 📜 **EvG Bot – Available Commands**
