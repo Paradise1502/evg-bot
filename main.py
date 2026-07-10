@@ -26,11 +26,11 @@ SEASON_SHEETS = {
     "hk2": "NxW - HK2",
     "sos3": "NxW - SoS3",
     "sos4": "NxW - SoS4",
-    "z2": "NxW - SoS4 - Z2",
-    "fz": "NxW - FZ",
+    "sos7": "EvG - SoS7",
+    "z2": "EvG - SoS7 - Z2",
 }
 
-DEFAULT_SEASON = "sos4"
+DEFAULT_SEASON = "sos7"
 
 # Now your bot setup
 intents = discord.Intents.default()
