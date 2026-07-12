@@ -1845,8 +1845,8 @@ async def matchups(ctx, season: str = DEFAULT_SEASON):
 
         # Matchups structured as tuples: (Team A tuple, Team B tuple)
         matchups = [
-            (("320", "620"), ("110", "247")),          # 1v1
-            (("17", "428"), ("345", "540")),           # 1v1
+            (("320", "620"), ("345", "540")),          # 1v1
+            (("17", "428"), ("110", "247")),           # 1v1
         ]
 
         # indices
