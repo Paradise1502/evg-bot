@@ -1227,7 +1227,7 @@ async def topdeads(ctx, *args):
         if a.isdigit():
             top_n = max(1, min(100, int(a)))  # clamp a bit
             continue
-        if a in ("EvG", "EvG320", "EvG"):
+        if a in ("EvG", "EvG320", "evg"):
             filter_EvG = True
             continue
         if a in ("all", "*"):
