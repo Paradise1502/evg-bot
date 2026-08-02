@@ -973,7 +973,7 @@ async def lowmerits(ctx, *args):
         a = str(arg).strip().lower()
         if a.isdigit():
             top_n = max(1, min(100, int(a)))
-        elif a in ("EvG", "EvG320", "EvG"):
+        elif a in ("EvG", "EvG320", "evg"):
             filter_EvG = True
         elif a in ("all", "*"):
             filter_EvG = False
